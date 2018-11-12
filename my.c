@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <cctype>
 #include "compile.h"
 
 #define norw 13       /* 保留字个数 */
 #define txmax 100     /* 符号表容量 */
 #define nmax 14       /* 数字的最大位数 */
-#define al 10         /* 标识符的最大长度 */
+#define allow_length 10         /* 标识符的最大长度 */
 #define addrmax 2048  /* 地址上界*/
 #define levmax 3      /* 最大允许过程嵌套声明层数*/
 #define cxmax 200     /* 最多的虚拟机代码数 */
@@ -16,14 +17,14 @@
 
 char ch;            /* 存放当前读取的字符，getch 使用 */
 enum symbol sym;    /* 当前的符号 */
-char id[al+1];      /* 当前ident，多出的一个字节用于存放0 */
+char id[allow_length+1];      /* 当前ident，多出的一个字节用于存放0 */
 int num;            /* 当前number */
-int cc, ll;         /* getch使用的计数器，cc表示当前字符(ch)的位置 */
+int current_char, line_length;         /* getch使用的计数器，cc表示当前字符(ch)的位置 */
 int linenum;
 char line[81];      /* 读取行缓冲区 */
-char a[al+1];       /* 临时符号，多出的一个字节用于存放0 */
+char tmp_array[allow_length+1];       /* 临时符号，多出的一个字节用于存放0 */
 
-char word[norw][al];        /* 保留字 */
+char word[norw][allow_length];        /* 保留字 */
 enum symbol wsym[norw];     /* 保留字对应的符号值 */
 enum symbol ssym[256];      /* 单字符的符号值 */
 bool declbegsys[symnum];    /* 表示声明开始的符号集合 */
@@ -100,7 +101,7 @@ void init() {
     statbegsys[forsym] = true;
     statbegsys[repeatsym] = true;
 
-    cc = ll = 0;
+    current_char = line_length = 0;
     ch = ' ';
     linenum = 0;
 }
@@ -112,6 +113,60 @@ void compile() {
     bool nxtlev[symnum];
     init();		/* 初始化 */
 
-    //getsym();
+    getsym();
 
+}
+
+/*
+词法分析
+*/
+void getsym() {
+    while(ch == ' ' || ch == '\n' || ch == '\t') {
+        getch();
+    }
+    if(ch == '$') sym = period;
+    else if(isalpha(ch)) { //symbol or ident
+        int cur = 0;
+        do {
+            if(cur < allow_length) {
+                tmp_array[cur] = ch;
+                cur++;
+            }
+            getch();
+        }while(isalnum(ch));
+        tmp_array[cur] = 0;
+        strcpy(id, tmp_array);
+        // binary search remains to write
+        int L = 0;
+        int R = norw - 1;
+
+    }
+
+}
+
+/*
+to get a single character
+*/
+void getch() {
+    if(current_char == line_length) {
+        //if char remain in buffer, o.w. get another char
+        if(feof(fin)) {
+            ch = '$';
+            return;
+        }
+        line_length = 0;
+        current_char = 0;
+        linenum++;
+        ch = ' ';
+        while(ch != '\n') {
+            if(fscanf(fin, "%c", &ch) == EOF) {
+                line[line_length] = 0;
+                break;
+            }
+            line[line_length] = ch;
+            line_length++;
+        }
+    }
+    ch = line[current_char];
+    current_char++;
 }
