@@ -1,0 +1,27 @@
+0 const m = 12;
+1 const n = 12;
+1 var x;
+1 var y;
+1 var z;
+1 var t;
+1 func gcd() {
+1 	var f;
+2 	var g;
+2 	f = x;
+5 	g = y;
+7 	while f != g {
+11 		if f < g {
+14 			g = g - f;
+19 		};
+20 		if g < f {
+23 			f = f - g;
+28 		};
+29 	};
+30 	z = f;
+32 }
+33 x = m;
+36 y = n;
+38 call gcd();
+39 t = x * y / z;
+45 print(z);
+===±àÒë³É¹¦!===

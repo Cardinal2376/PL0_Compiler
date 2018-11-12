@@ -1,0 +1,32 @@
+# depslib dependency file v1.0
+1540782836 source:c:\users\10152130143\desktop\sad\main.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"compile.h"
+	"my.c"
+
+1538966423 c:\users\10152130143\desktop\sad\compile.h
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<stdbool.h>
+
+1538966697 source:c:\users\10152130143\desktop\sad\compile.cpp
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"compile.h"
+
+1540782696 source:c:\users\10152130143\desktop\sad\my.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"compile.h"
+
+1540782857 c:\users\10152130143\desktop\sad\my.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	"compile.h"
+
